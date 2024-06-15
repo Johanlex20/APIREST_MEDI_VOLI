@@ -6,6 +6,7 @@ import med.voli.api.direccion.Direccion;
 @Entity(name = "medico")
 @Table(name = "medicos")
 @Getter
+@Setter
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,12 +35,32 @@ public class Medico {
 
     private String telefono;
 
+    private Boolean activo;
+
     public Medico(DatosRegistroMedico datosRegistroMedico) {
+        this.activo = true;
         this.nombre = datosRegistroMedico.nombre();
         this.email = datosRegistroMedico.email();
         this.documento = datosRegistroMedico.documento();
         this.especialidad = datosRegistroMedico.especialidad();
         this.direccion = new Direccion(datosRegistroMedico.direccion());
         this.telefono = datosRegistroMedico.telefono();
+    }
+
+    public void actualizarDatos(DatosActualizarMedico datosActualizarMedico) {
+
+        if (datosActualizarMedico.nombre() != null){
+            this.nombre = datosActualizarMedico.nombre();
+        }
+        if (datosActualizarMedico.documento() != null){
+            this.documento = datosActualizarMedico.documento();
+        }
+        if (datosActualizarMedico.direccion() != null){
+            this.direccion = direccion.actualizarDatos(datosActualizarMedico.direccion());
+        }
+    }
+
+    public void desactivarMedico() {
+        this.activo = false;
     }
 }
