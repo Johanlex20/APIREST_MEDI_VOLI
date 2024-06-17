@@ -1,12 +1,11 @@
 package med.voli.api.controllers;
 import jakarta.validation.Valid;
-import med.voli.api.direccion.DatosDireccion;
-import med.voli.api.medico.*;
+import med.voli.api.domain.direccion.DatosDireccion;
+import med.voli.api.domain.medico.*;
 import med.voli.api.repository.iMedicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,7 @@ public class MedicoController {
 
     @PostMapping
     public ResponseEntity<DatosRespuestaMedico> registrarMedico(@RequestBody @Valid DatosRegistroMedico datosRegistroMedico,
-                                          UriComponentsBuilder uriComponentsBuilder){
+                                                                UriComponentsBuilder uriComponentsBuilder){
        Medico medico = medicoRepository.save(new Medico(datosRegistroMedico));
        DatosRespuestaMedico datosRespuestaMedico = new DatosRespuestaMedico(
                 medico.getId(),
