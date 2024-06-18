@@ -23,7 +23,6 @@ public class Medico {
     private String email;
 
     @Column(unique = true, length = 6)
-
     private String documento;
 
     @Enumerated(EnumType.STRING)

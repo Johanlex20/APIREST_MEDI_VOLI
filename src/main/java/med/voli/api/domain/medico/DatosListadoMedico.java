@@ -1,5 +1,6 @@
 package med.voli.api.domain.medico;
 
+
 public record DatosListadoMedico(
 
         Long id,
@@ -8,7 +9,9 @@ public record DatosListadoMedico(
         String documenteo,
         String email
 ) {
-    public DatosListadoMedico(Medico medico){
+
+    public DatosListadoMedico(Medico medico) {
         this(medico.getId(), medico.getNombre(), medico.getEspecialidad().toString(), medico.getDocumento(), medico.getEmail());
     }
+
 }
