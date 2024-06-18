@@ -1,6 +1,8 @@
 package med.voli.api.domain.consulta;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
+import med.voli.api.domain.medico.Especialidad;
+
 import java.time.LocalDateTime;
 
 public record DatosAgendarConsulta(
@@ -10,6 +12,7 @@ public record DatosAgendarConsulta(
         Long idMedico,
         @NotNull
         @Future
-        LocalDateTime fecha
+        LocalDateTime fecha,
+        Especialidad especialidad
 ) {
 }

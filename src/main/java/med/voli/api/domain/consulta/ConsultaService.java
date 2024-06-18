@@ -1,6 +1,7 @@
 package med.voli.api.domain.consulta;
 import med.voli.api.domain.medico.Medico;
 import med.voli.api.domain.paciente.Paciente;
+import med.voli.api.infra.errores.ValidacionDeIntegridad;
 import med.voli.api.repository.iConsultaRepository;
 import med.voli.api.repository.iMedicoRepository;
 import med.voli.api.repository.iPacienteRepository;
@@ -19,12 +20,34 @@ public class ConsultaService {
 
     public void agendar(DatosAgendarConsulta datos){
 
+        if(pacienteRepository.findById(datos.idPaciente()).isPresent()){
+            throw new ValidacionDeIntegridad("Id para el paciente no fue encotrado");
+        }
+
+        if (datos.idMedico() != null && medicoRepository.existsById(datos.idMedico())){
+            throw new ValidacionDeIntegridad("Id para el medico no fue encotrado");
+        }
+
+
+
+
         var paciente = pacienteRepository.findById(datos.idPaciente()).get();
-        var medico = medicoRepository.findById(datos.idMedico()).get();
+        var medico = seleccionarMedico(datos);
 
         var consulta = new Consulta(null, medico, paciente, datos.fecha());
 
         consultaRepository.save(consulta);
+    }
+
+    private Medico seleccionarMedico(DatosAgendarConsulta datos) {
+        if (datos.idMedico() != null){
+            return medicoRepository.getReferenceById(datos.idMedico());
+        }
+        if (datos.especialidad() == null){
+            throw new ValidacionDeIntegridad("debe selecionarce una especialidad para el medico");
+        }
+
+        return medicoRepository.seleccionarMedicoConEspecialidadEnFecha(datos.especialidad(), datos.fecha());
     }
 
 }
