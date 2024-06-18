@@ -1,6 +1,10 @@
 package med.voli.api.controllers;
 import jakarta.validation.Valid;
 import med.voli.api.domain.usuarios.DatosAutenticacionUsuario;
+import med.voli.api.domain.usuarios.Usuarios;
+import med.voli.api.infra.Security.DatosJWTToken;
+import med.voli.api.infra.Security.TokenService;
+import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,14 +21,17 @@ public class AutenticacionController {
 
     @Autowired
     private AuthenticationManager autenticacionManager;
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping
     public ResponseEntity autenticarUsuario(@RequestBody @Valid DatosAutenticacionUsuario datosAutenticacionUsuario){
-        Authentication token = new UsernamePasswordAuthenticationToken(
+        Authentication authenticationToken = new UsernamePasswordAuthenticationToken(
                 datosAutenticacionUsuario.login(),
                 datosAutenticacionUsuario.clave());
-        autenticacionManager.authenticate(token);
-        return ResponseEntity.ok().build();
+        var usuarioAuthenticado = autenticacionManager.authenticate(authenticationToken);
+        var jwtToken = tokenService.generarToken((Usuarios) usuarioAuthenticado.getPrincipal());
+        return ResponseEntity.ok(new DatosJWTToken(jwtToken));
     }
 
 }
