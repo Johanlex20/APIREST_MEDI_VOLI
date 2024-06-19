@@ -28,12 +28,10 @@ public class ConsultaService {
             throw new ValidacionDeIntegridad("Id para el medico no fue encotrado");
         }
 
-
-
+        //VALIDACIONES
 
         var paciente = pacienteRepository.findById(datos.idPaciente()).get();
         var medico = seleccionarMedico(datos);
-
         var consulta = new Consulta(null, medico, paciente, datos.fecha());
 
         consultaRepository.save(consulta);
