@@ -10,8 +10,8 @@ public interface iPacienteRepository extends JpaRepository<Paciente,Long> {
 
     @Query("""
             SELECT p.activo
-            FROM Paciente p
+            FROM paciente p
             WHERE p.id=:idPaciente
             """)
-    Boolean findActivoById(Long aLong);
+    Boolean findActivoById(Long idPaciente);
 }

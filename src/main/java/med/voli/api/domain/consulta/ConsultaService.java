@@ -1,12 +1,14 @@
 package med.voli.api.domain.consulta;
 import med.voli.api.domain.consulta.validaciones.iValidadorDeConsultas;
 import med.voli.api.domain.medico.Medico;
+import med.voli.api.domain.paciente.Paciente;
 import med.voli.api.infra.errores.ValidacionDeIntegridad;
 import med.voli.api.repository.iConsultaRepository;
 import med.voli.api.repository.iMedicoRepository;
 import med.voli.api.repository.iPacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -21,13 +23,13 @@ public class ConsultaService {
     @Autowired
     List<iValidadorDeConsultas> validadores;
 
-    public void agendar(DatosAgendarConsulta datos){
+    public DatosDetalleConsulta agendar(DatosAgendarConsulta datos){
 
-        if(pacienteRepository.findById(datos.idPaciente()).isPresent()){
+        if(!pacienteRepository.findById(datos.idPaciente()).isPresent()){
             throw new ValidacionDeIntegridad("Id para el paciente no fue encotrado");
         }
 
-        if (datos.idMedico() != null && medicoRepository.existsById(datos.idMedico())){
+        if (datos.idMedico() != null && !medicoRepository.existsById(datos.idMedico())){
             throw new ValidacionDeIntegridad("Id para el medico no fue encotrado");
         }
 
@@ -36,9 +38,16 @@ public class ConsultaService {
 
         var paciente = pacienteRepository.findById(datos.idPaciente()).get();
         var medico = seleccionarMedico(datos);
+
+        if(medico == null){
+            throw new ValidacionDeIntegridad("No existen medicos disponibles para este horario y especialidad");
+        }
+
         var consulta = new Consulta(null, medico, paciente, datos.fecha());
 
         consultaRepository.save(consulta);
+
+        return new DatosDetalleConsulta(consulta);
     }
 
     private Medico seleccionarMedico(DatosAgendarConsulta datos) {
@@ -50,5 +59,4 @@ public class ConsultaService {
         }
         return medicoRepository.seleccionarMedicoConEspecialidadEnFecha(datos.especialidad(), datos.fecha());
     }
-
 }

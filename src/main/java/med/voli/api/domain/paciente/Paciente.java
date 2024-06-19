@@ -2,7 +2,6 @@ package med.voli.api.domain.paciente;
 import jakarta.persistence.*;
 import lombok.*;
 import med.voli.api.domain.direccion.Direccion;
-import med.voli.api.domain.medico.DatosActualizarMedico;
 
 @Entity(name = "paciente")
 @Table(name = "pacientes")
@@ -26,6 +25,7 @@ public class Paciente {
     @Column(unique = true, length = 100)
     private String email;
 
+    @Column(length = 10)
     private String telefono;
 
     @Embedded

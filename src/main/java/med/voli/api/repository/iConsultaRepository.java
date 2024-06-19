@@ -1,7 +1,6 @@
 package med.voli.api.repository;
 import med.voli.api.domain.consulta.Consulta;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -11,5 +10,5 @@ public interface iConsultaRepository extends JpaRepository<Consulta,Long> {
 
     Boolean existsByPacienteIdAndDataBetween(Long idPaciente, LocalDateTime primerHorario, LocalDateTime ultimoHorario);
 
-    Boolean existByMedicoIdAndData(Long aLong, LocalDateTime fecha);
+    Boolean existsByMedicoIdAndData(Long idMedico, LocalDateTime fecha);
 }

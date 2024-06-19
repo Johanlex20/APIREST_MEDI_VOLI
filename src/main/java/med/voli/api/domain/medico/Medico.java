@@ -32,6 +32,7 @@ public class Medico {
     @Embedded
     private Direccion direccion;
 
+    @Column(length = 10)
     private String telefono;
 
     private Boolean activo;
