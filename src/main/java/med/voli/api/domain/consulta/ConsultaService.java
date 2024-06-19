@@ -1,12 +1,13 @@
 package med.voli.api.domain.consulta;
+import med.voli.api.domain.consulta.validaciones.iValidadorDeConsultas;
 import med.voli.api.domain.medico.Medico;
-import med.voli.api.domain.paciente.Paciente;
 import med.voli.api.infra.errores.ValidacionDeIntegridad;
 import med.voli.api.repository.iConsultaRepository;
 import med.voli.api.repository.iMedicoRepository;
 import med.voli.api.repository.iPacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class ConsultaService {
@@ -17,6 +18,8 @@ public class ConsultaService {
     private iPacienteRepository pacienteRepository;
     @Autowired
     private iConsultaRepository consultaRepository;
+    @Autowired
+    List<iValidadorDeConsultas> validadores;
 
     public void agendar(DatosAgendarConsulta datos){
 
@@ -29,6 +32,7 @@ public class ConsultaService {
         }
 
         //VALIDACIONES
+        validadores.forEach(v->v.validar(datos));
 
         var paciente = pacienteRepository.findById(datos.idPaciente()).get();
         var medico = seleccionarMedico(datos);
@@ -44,7 +48,6 @@ public class ConsultaService {
         if (datos.especialidad() == null){
             throw new ValidacionDeIntegridad("debe selecionarce una especialidad para el medico");
         }
-
         return medicoRepository.seleccionarMedicoConEspecialidadEnFecha(datos.especialidad(), datos.fecha());
     }
 
